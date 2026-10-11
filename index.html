@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Календарь конкурсов — muzcatalog</title>
+<meta name="description" content="Сроки подачи заявок и даты конкурсов учебных заведений Беларуси">
+<meta name="color-scheme" content="light dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- Экран импорта: пока база не загружена -->
+<section class="screen" id="import">
+  <div class="import-wrap">
+    <div class="import-card">
+      <div class="logo"><span class="logo-bars"><i></i><i></i></span><span>muzcatalog</span></div>
+
+      <h1>Календарь конкурсов</h1>
+      <p class="lead">Сроки подачи заявок и даты конкурсов учебных заведений Беларуси.
+         Откройте файл базы — он остаётся в браузере и никуда не отправляется.</p>
+
+      <label class="drop" id="drop" for="file">
+        <span class="drop-bars"><i></i><i></i><i></i><i></i></span>
+        <span class="drop-title">Перетащите muzcatalog.db сюда</span>
+        <span class="drop-sub">или нажмите, чтобы выбрать файл · .db или .json</span>
+      </label>
+      <input type="file" id="file" accept=".db,.sqlite,.sqlite3,.json" hidden>
+
+      <p class="status" id="status" hidden></p>
+
+      <p class="recall" id="recall" hidden>
+        <button type="button" class="btn" id="reopen">Открыть прошлую базу</button>
+        <span class="dim" id="recall-info"></span>
+      </p>
+
+      <p class="hint">
+        Нужен файл <code>muzcatalog.db</code> — его собирает сборщик каталога
+        (<code>python collect/refresh.py</code>). На сайте каталог не хранится: данные
+        остаются у вас, страница только показывает их.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- Рабочий экран -->
+<div class="app" id="app" hidden>
+
+  <header class="topbar">
+    <div class="brand">
+      <h1 id="title">Календарь конкурсов</h1>
+      <span class="count" id="count"></span>
+    </div>
+
+    <div class="seg" id="period" role="group" aria-label="Период">
+      <button type="button" data-months="3">3 мес.</button>
+      <button type="button" data-months="6" class="on">6 мес.</button>
+      <button type="button" data-months="12">12 мес.</button>
+      <button type="button" data-months="0">всё время</button>
+    </div>
+
+    <div class="nav">
+      <button type="button" class="btn icon" id="prev" aria-label="Предыдущий период">←</button>
+      <button type="button" class="btn" id="today">сегодня</button>
+      <button type="button" class="btn icon" id="next" aria-label="Следующий период">→</button>
+    </div>
+
+    <span class="sep" aria-hidden="true"></span>
+
+    <div class="nav">
+      <button type="button" class="btn icon" id="theme" aria-label="Переключить тему">◐</button>
+      <button type="button" class="btn" id="switch-db">Другая база</button>
+    </div>
+  </header>
+
+  <aside class="panel side">
+    <label class="cap" for="q">Заведения</label>
+    <input type="search" id="q" placeholder="Поиск по названию, городу">
+    <div class="places" id="places"></div>
+    <div class="filters">
+      <button type="button" class="chip" id="chip-own" aria-pressed="false">только свои</button>
+      <button type="button" class="chip" id="chip-dl" aria-pressed="false">только сроки заявок</button>
+    </div>
+    <p class="sub mono" id="dbinfo" style="margin-top:12px"></p>
+  </aside>
+
+  <main class="main">
+    <p class="legend" id="legend"></p>
+    <div class="months" id="months"></div>
+    <section class="panel list" id="list"></section>
+  </main>
+
+  <aside class="panel side detail" id="detail"></aside>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.11.0/sql-wasm.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
